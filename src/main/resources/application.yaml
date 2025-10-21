@@ -1,0 +1,29 @@
+spring:
+  cloudinary:
+    cloud_name: dh0qn5xbk
+    api_key: 367863941559932
+    api_secret: QVOQihDhOZc7KfdzVm2aPgC4nYs
+  datasource:
+    url: jdbc:mysql://localhost:3306/storage_service
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/tien #den tu realms nao // cai base cua khong gian realm trong keycloak
+          jwk-set-uri: ${spring.security.oauth2.resource server.jwt.issuer-uri}/protocol/openid-connect/certs #biet
+keycloak:
+  realm: tien
+  auth-server-url: http://localhost:8180
+  client-id: ss_app
+  client-secret: OpXDhiUQlWvis8g8xs7oEvkSrSEsXCuz
+
