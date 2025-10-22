@@ -32,14 +32,14 @@ public class AppConfig {
         return new Cloudinary(config);
     }
 
-//    @Bean
-//    public Keycloak keycloak() {
-//        return KeycloakBuilder.builder()
-//                .serverUrl(keycloakProperties.getAuthServerUrl())
-//                .realm(keycloakProperties.getRealm())
-//                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-//                .clientId(keycloakProperties.getClientId())
-//                .clientSecret(keycloakProperties.getClientSecret())
-//                .build();
-//    }
+    @Bean
+    public Keycloak keycloak() {
+        return KeycloakBuilder.builder()
+                .serverUrl(keycloakProperties.getAuthServerUrl())
+                .realm(keycloakProperties.getRealm())
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+                .clientId(keycloakProperties.getClientId())
+                .clientSecret(keycloakProperties.getClientSecret())
+                .build();
+    }
 }
