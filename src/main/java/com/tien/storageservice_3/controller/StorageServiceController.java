@@ -1,5 +1,8 @@
 package com.tien.storageservice_3.controller;
 
+import com.tien.storageservice_3.dto.request.FileFilterRequest;
+import com.tien.storageservice_3.dto.request.GetImageRequest;
+import com.tien.storageservice_3.dto.request.UpdateFileRequest;
 import com.tien.storageservice_3.dto.response.ApiResponse;
 import com.tien.storageservice_3.dto.response.FIleS2Response;
 import com.tien.storageservice_3.exception.AppException;
@@ -9,14 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,14 +85,15 @@ public class StorageServiceController {
     @Operation(summary = "update a File",
             description = "update a file and manage by cloudinary")
     @PutMapping()
-    public ApiResponse<String> updateFile(@RequestParam("oldPublicId") String oldPublicId,
-                                          @RequestParam("file") MultipartFile newFile,
-                                          @RequestParam(value = "typeOfFile", required = false) String typeOfFile) {
+    public ApiResponse<String> updateFile(@RequestParam MultipartFile newFile,
+                                          @ModelAttribute UpdateFileRequest updateFileRequest) {
         try {
             return ApiResponse.<String>builder()
                     .code(200)
                     .message("update file successfully")
-                    .result(cloudinaryService.updateFile(oldPublicId, newFile, typeOfFile))
+                    .result(cloudinaryService.updateFile(updateFileRequest.getOldPublicId(),
+                            newFile,
+                            updateFileRequest.getTypeOfFile()))
                     .build();
         } catch (Exception e) {
             throw new AppException(ErrorCode.ERROR_UPLOAD_FILE);
@@ -104,40 +103,40 @@ public class StorageServiceController {
     @Operation(summary = "get a File",
             description = "get a file and manage by cloudinary with radio or width, height")
     @GetMapping("/file-publicId")
-    public ApiResponse<String> getFile(@RequestParam String publicId,
-                                       @RequestParam(required = false) Integer width,
-                                       @RequestParam(required = false) Integer height,
-                                       @RequestParam(required = false) String cropMode,
-                                       @RequestParam(required = false) String ratio) {
-        if (ratio == null) {
+    public ApiResponse<String> getFile(@ModelAttribute GetImageRequest getImageRequest) {
+        if (getImageRequest.getRatio() == null) {
             return ApiResponse.<String>builder()
                     .code(200)
                     .message("get file successfully")
                     .result(cloudinaryService
-                            .getTransformedImageUrl(publicId, width, height, cropMode))
+                            .getTransformedImageUrl(getImageRequest.getPublicId(),
+                                    getImageRequest.getWidth(),
+                                    getImageRequest.getHeight(),
+                                    getImageRequest.getCropMode()))
                     .build();
         } else return ApiResponse.<String>builder()
                 .code(200)
                 .message("get file successfully")
                 .result(cloudinaryService
-                        .getImageByRatio(publicId, ratio))
+                        .getImageByRatio(getImageRequest.getPublicId(),
+                                getImageRequest.getRatio()))
                 .build();
     }
 
     @Operation(summary = "filter File",
             description = "filter file with filename, type, create date, modify date, owner")
     @GetMapping("/filter")
-    public ApiResponse<Page<FIleS2Response>> filter(@RequestParam(required = false) String fileName,
-                                                    @RequestParam(required = false) String typeOfFile,
-                                                    @RequestParam(required = false) String createDate,
-                                                    @RequestParam(required = false) String modifyDate,
-                                                    @RequestParam(required = false) String owner,
-                                                    @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "5") int size) {
+    public ApiResponse<Page<FIleS2Response>> filter(@ModelAttribute FileFilterRequest filterRequest) {
         return ApiResponse.<Page<FIleS2Response>>builder()
                 .code(200)
                 .message("filter file successfully")
-                .result(cloudinaryService.search(fileName, typeOfFile, getInstant(createDate), getInstant(modifyDate), owner, page, size))
+                .result(cloudinaryService.search(filterRequest.getFileName(),
+                        filterRequest.getTypeOfFile(),
+                        getInstant(filterRequest.getCreateDate()),
+                        getInstant(filterRequest.getModifyDate()),
+                        filterRequest.getOwner(),
+                        filterRequest.getPage(),
+                        filterRequest.getSize()))
                 .build();
     }
 }
