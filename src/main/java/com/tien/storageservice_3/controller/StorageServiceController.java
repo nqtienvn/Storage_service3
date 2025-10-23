@@ -2,18 +2,25 @@ package com.tien.storageservice_3.controller;
 
 import com.tien.storageservice_3.dto.request.FileFilterRequest;
 import com.tien.storageservice_3.dto.request.GetImageRequest;
+import com.tien.storageservice_3.dto.request.GetProfileRequest;
 import com.tien.storageservice_3.dto.request.UpdateFileRequest;
 import com.tien.storageservice_3.dto.response.ApiResponse;
 import com.tien.storageservice_3.dto.response.FIleS2Response;
 import com.tien.storageservice_3.exception.AppException;
 import com.tien.storageservice_3.exception.ErrorCode;
+import com.tien.storageservice_3.repository.FileS2Repository;
 import com.tien.storageservice_3.service.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +33,7 @@ import static com.tien.storageservice_3.service.DateStringToInstantService.getIn
 @Tag(name = "Storage Controller")
 public class StorageServiceController {
     private final CloudinaryService cloudinaryService;
+    private final FileS2Repository fileS2Repository;
 
     //Upload 1 file
     @Operation(summary = "upload a File",
@@ -121,6 +129,42 @@ public class StorageServiceController {
                         .getImageByRatio(getImageRequest.getPublicId(),
                                 getImageRequest.getRatio()))
                 .build();
+    }
+
+    @Operation(summary = "get my Profile",
+            description = "get my profile with ratio, width, height")
+    @GetMapping(value = "/profile")
+    ResponseEntity<ApiResponse<?>> getProfile(@ModelAttribute GetProfileRequest getProfileRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String username;
+
+        if (principal instanceof Jwt jwtToken) {
+            username = jwtToken.getClaimAsString("preferred_username"); //jwt
+        } else {
+            username = authentication.getName(); //xt cơ bản
+        }
+        String publicId = fileS2Repository.findByCreatedBy(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)).getPublicId();
+        //tim trong preferredUserName xem co ten do khong
+        //tim ra public id
+        if (getProfileRequest.getRatio() == null) {
+            return ResponseEntity.ok(ApiResponse.<String>builder()
+                    .code(200)
+                    .message("get profile successfully")
+                    .result(cloudinaryService
+                            .getTransformedImageUrl(publicId,
+                                    getProfileRequest.getWidth(),
+                                    getProfileRequest.getHeight(),
+                                    getProfileRequest.getCropMode()))
+                    .build());
+        } else return ResponseEntity.ok(ApiResponse.<String>builder()
+                .code(200)
+                .message("get profile successfully")
+                .result(cloudinaryService
+                        .getImageByRatio(publicId,
+                                getProfileRequest.getRatio()))
+                .build());
     }
 
     @Operation(summary = "filter File",

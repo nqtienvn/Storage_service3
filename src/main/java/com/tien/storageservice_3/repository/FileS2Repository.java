@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface FileS2Repository extends JpaRepository<FileS2, Long> {
     Optional<FileS2> findByPublicId(String publicId);
-
+    Optional<FileS2> findByCreatedBy(String createdBy);
     Page<FileS2> findAll(Pageable pageable);
 
     @Query("""

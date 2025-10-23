@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
-    @ExceptionHandler(AppException.class) //bên kia throws new thi bên này nhận, exception inject
-    public ResponseEntity<ApiResponse> handleAppException(AppException ex) {
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(ex.getErrorCode().getCode());
-        apiResponse.setMessage(ex.getErrorCode().getMessage());
-        return ResponseEntity.status(ex.getErrorCode().getHttpStatusCode()).body(apiResponse);
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse> generateAppException(AppException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
+        return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
     }
 }
