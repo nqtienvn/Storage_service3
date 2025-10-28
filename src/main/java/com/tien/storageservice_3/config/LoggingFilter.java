@@ -15,16 +15,14 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
+
 @Component
 @RequiredArgsConstructor
 public class LoggingFilter extends OncePerRequestFilter {
     private final LogRepository logRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // Bọc request và response
         ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);

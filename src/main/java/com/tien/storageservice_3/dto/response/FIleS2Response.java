@@ -19,7 +19,7 @@ public class FIleS2Response {
     String fileName;
     String type;
     String url;
-    Instant createdBy;
+    String createdBy;
     Instant createdDate;
     String publicId;
 }

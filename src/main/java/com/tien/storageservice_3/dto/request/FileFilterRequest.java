@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,8 +15,8 @@ import lombok.experimental.FieldDefaults;
 public class FileFilterRequest {
     String fileName;
     String typeOfFile;
-    String createDate;
-    String modifyDate;
+    Instant createDate;
+    Instant modifyDate;
     String owner;
     int page = 0;
     int size = 5;

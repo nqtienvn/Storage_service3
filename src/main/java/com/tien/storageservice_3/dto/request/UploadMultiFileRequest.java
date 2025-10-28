@@ -11,8 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateFileRequest {
-    MultipartFile file;
-    String oldPublicId;
+public class UploadMultiFileRequest {
+    MultipartFile[] files;
     String typeOfFile;
 }

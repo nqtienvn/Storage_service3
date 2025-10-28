@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: storage-service
   cloudinary:
     cloud_name: dh0qn5xbk
     api_key: 367863941559932
@@ -21,5 +23,25 @@ spring:
         jwt:
           issuer-uri: http://localhost:8180/realms/tien #den tu realms nao // cai base cua khong gian realm trong keycloak
           jwk-set-uri: ${spring.security.oauth2.resource server.jwt.issuer-uri}/protocol/openid-connect/certs #biet
+server:
+  port: 8082
 
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 5
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5
+    fetch-registry: true
+    register-with-eureka: true
 
+open:
+  api:
+    title: "STORAGE_SERVICE"
+    version: "v1.0.0"
+    description: "manage with file"
+    url: "http://localhost:8082"
+    description-server-url: "server-dev"
