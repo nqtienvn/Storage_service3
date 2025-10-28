@@ -9,9 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/cloudinary")
@@ -30,7 +28,6 @@ public class StorageServiceController {
                 .result(cloudinaryService.uploadFile(uploadFileRequest))
                 .build();
     }
-
     @Operation(summary = "upload multi File",
             description = "upload multi file and manage by cloudinary")
     @PostMapping("/multi-file")

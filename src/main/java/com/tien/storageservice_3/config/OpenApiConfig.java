@@ -24,15 +24,6 @@ public class OpenApiConfig {
                         .version(version)
                         .description(description))
                 .servers(List.of(new Server().url(url).description(descriptionServerUrl)));
-//                .components(
-//                        new Components()
-//                                .addSecuritySchemes(
-//                                        "bearerAuth",
-//                                        new SecurityScheme()
-//                                                .type(SecurityScheme.Type.HTTP)
-//                                                .scheme("bearer")
-//                                                .bearerFormat("JWT")))
-//                .security(List.of(new SecurityRequirement().addList("bearerAuth")));
     }
 
     @Bean
