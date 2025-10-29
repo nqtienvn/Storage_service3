@@ -1,14 +1,15 @@
 package com.tien.storageservice_3.controller;
 
-import com.tien.storageservice_3.dto.request.*;
-import com.tien.storageservice_3.dto.response.ApiResponse;
-import com.tien.storageservice_3.dto.response.FIleS2Response;
+import com.tien.common.dto.request.*;
+import com.tien.common.dto.response.ApiResponse;
+import com.tien.common.dto.response.FileS2Response;
 import com.tien.storageservice_3.service.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -28,6 +29,7 @@ public class StorageServiceController {
                 .result(cloudinaryService.uploadFile(uploadFileRequest))
                 .build();
     }
+
     @Operation(summary = "upload multi File",
             description = "upload multi file and manage by cloudinary")
     @PostMapping("/multi-file")
@@ -86,8 +88,8 @@ public class StorageServiceController {
     @Operation(summary = "filter File",
             description = "filter file with filename, type, create date, modify date, owner")
     @GetMapping("/filter")
-    public ApiResponse<Page<FIleS2Response>> filter(@ModelAttribute FileFilterRequest filterRequest) {
-        return ApiResponse.<Page<FIleS2Response>>builder()
+    public ApiResponse<Page<FileS2Response>> filter(@ModelAttribute FileFilterRequest filterRequest) {
+        return ApiResponse.<Page<FileS2Response>>builder()
                 .code(200)
                 .message("filter file successfully")
                 .result(cloudinaryService.search(filterRequest))

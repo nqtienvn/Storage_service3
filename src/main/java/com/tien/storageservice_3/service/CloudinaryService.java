@@ -3,11 +3,11 @@ package com.tien.storageservice_3.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
-import com.tien.storageservice_3.dto.request.*;
-import com.tien.storageservice_3.dto.response.FIleS2Response;
+import com.tien.common.dto.request.*;
+import com.tien.common.dto.response.FileS2Response;
+import com.tien.common.exception.AppException;
+import com.tien.common.exception.ErrorCode;
 import com.tien.storageservice_3.entity.FileS2;
-import com.tien.storageservice_3.exception.AppException;
-import com.tien.storageservice_3.exception.ErrorCode;
 import com.tien.storageservice_3.mapper.FileS2Mapper;
 import com.tien.storageservice_3.repository.FileS2Repository;
 import jakarta.transaction.Transactional;
@@ -192,11 +192,11 @@ public class CloudinaryService {
                 .generate(getImageRequest.getPublicId());
     }
 
-    public Page<FIleS2Response> search(FileFilterRequest filterRequest) {
+    public Page<FileS2Response> search(FileFilterRequest filterRequest) {
         Pageable pageable = PageRequest.of(filterRequest.getPage(), filterRequest.getSize());
         Page<FileS2> pageFile = fileS2Repository
                 .search(filterRequest.getFileName(), filterRequest.getTypeOfFile(), filterRequest.getCreateDate(), filterRequest.getModifyDate(), filterRequest.getOwner(), pageable);
-        List<FIleS2Response> listFilter = pageFile
+        List<FileS2Response> listFilter = pageFile
                 .getContent()
                 .stream()
                 .map(fileS2Mapper::toFileS2Response)

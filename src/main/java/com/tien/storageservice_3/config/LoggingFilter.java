@@ -1,6 +1,6 @@
 package com.tien.storageservice_3.config;
 
-import com.tien.storageservice_3.entity.Log;
+import com.tien.common.entity.Log;
 import com.tien.storageservice_3.repository.LogRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

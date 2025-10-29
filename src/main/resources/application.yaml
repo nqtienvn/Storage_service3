@@ -42,6 +42,8 @@ open:
   api:
     title: "STORAGE_SERVICE"
     version: "v1.0.0"
+    scanPackage: "com.tien.storageservice_3.controller"
+    group: "storage_service"
     description: "manage with file"
     url: "http://localhost:8082"
     description-server-url: "server-dev"

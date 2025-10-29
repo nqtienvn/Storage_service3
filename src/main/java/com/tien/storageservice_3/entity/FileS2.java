@@ -1,5 +1,6 @@
 package com.tien.storageservice_3.entity;
 
+import com.tien.common.entity.Auditor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileS2 extends Auditor{
+public class FileS2 extends Auditor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
